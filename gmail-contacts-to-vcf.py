@@ -97,18 +97,18 @@ class Contacts(object):
             contact.n.value.additional = entry.name.additional_name.text
         contact.add("fn")
         contact.fn.value = entry.name.full_name.text
-        contact.add("name").value = entry.title.text
+        contact.add("name").value = entry.title.text.encode('ascii', 'replace').strip()
 
         # Email addresses
         for email in entry.email:
             c_email = contact.add("email")
-            c_email.value = email.address
+            c_email.value = email.address.encode('ascii', 'replace').strip()
             if email.primary and email.primary == 'true':
                 c_email.type_param = "PREF"
 
         # Note
-        if entry.content:
-            contact.add("note").value = entry.content.text
+        if entry.content and entry.content.text:
+            contact.add("note").value = entry.content.text.encode('ascii', 'replace').strip()
 
         # Groups
         groups = []
@@ -131,12 +131,12 @@ class Contacts(object):
             elif phone_type == "work_fax":
                 phone_type = "fax"
             tel = contact.add("tel")
-            tel.value = phone.text
+            tel.value = phone.text.encode('ascii', 'replace').strip()
             tel.type_param = phone_type.upper()
 
         # Organization
-        if entry.organization:
-            contact.add("org").value = [entry.organization.name.text]
+        if entry.organization and entry.organization.name and entry.organization.name.text:
+            contact.add("org").value = [entry.organization.name.text.encode('ascii', 'replace').strip()]
 
         # Birthday
         if entry.birthday:
@@ -147,19 +147,19 @@ class Contacts(object):
             adr = contact.add("adr")
             adr.value = vobject.vcard.Address()
             if address.street:
-                adr.value.street = address.street.text,
+                adr.value.street = address.street.text.encode('ascii', 'replace').strip(),
             if address.city:
-                adr.value.city = address.city.text,
+                adr.value.city = address.city.text.encode('ascii', 'replace').strip(),
             if address.region:
-                adr.value.region = address.region.text,
+                adr.value.region = address.region.text.encode('ascii', 'replace').strip(),
             if address.neighborhood:
-                adr.value.code = address.neighborhood.text,
+                adr.value.code = address.neighborhood.text.encode('ascii', 'replace').strip(),
             if address.postcode:
-                adr.value.code = address.postcode.text,
+                adr.value.code = address.postcode.text.encode('ascii', 'replace').strip(),
             if address.country:
-                adr.value.country = address.country.text,
+                adr.value.country = address.country.text.encode('ascii', 'replace').strip(),
             if address.po_box:
-                adr.value.box = address.po_box.text,
+                adr.value.box = address.po_box.text.encode('ascii', 'replace').strip(),
             adr_type = urlparse(address.rel).fragment
             adr.type_param = adr_type.upper()
 
