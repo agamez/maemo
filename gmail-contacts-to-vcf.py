@@ -167,7 +167,7 @@ class Contacts(object):
         for link in entry.link:
             if link.rel != "http://schemas.google.com/contacts/2008/rel#photo":
                 continue
-            if "{http://schemas.google.com/g/2005}etag" not in link._other_attributes:
+            if not link.etag:
                 continue
             hosted_image_binary = self.gd_client.GetPhoto(entry)
             if hosted_image_binary:
